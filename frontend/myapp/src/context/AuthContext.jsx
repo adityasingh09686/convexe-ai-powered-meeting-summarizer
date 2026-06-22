@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios, { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
 
-export const AuthContext = createContext({});
-
 import server from "../environment.js";
+
+export const AuthContext = createContext({});
 
 const BACKEND_URL = process.env.NODE_ENV === "production" ? server.prod : server.dev;
 
