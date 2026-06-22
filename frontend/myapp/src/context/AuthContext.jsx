@@ -5,8 +5,12 @@ import { toast } from "react-toastify";
 
 export const AuthContext = createContext({});
 
+import server from "../environment.js";
+
+const BACKEND_URL = process.env.NODE_ENV === "production" ? server.prod : server.dev;
+
 const client = axios.create({
-    baseURL: "http://localhost:8000/api/v1/users"
+    baseURL: `${BACKEND_URL}/api/v1/users`
 });
 
 export const AuthProvider = ({ children }) => {

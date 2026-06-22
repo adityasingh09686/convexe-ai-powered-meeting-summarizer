@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, CircularProgress, IconButton, Paper, Divider } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import server from '../environment.js';
 export default function SummaryPage() {
     const { meetingCode } = useParams();
     const router = useNavigate();
@@ -10,7 +10,7 @@ export default function SummaryPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const server_url = `http://${window.location.hostname}:8000`;
+    const server_url = process.env.NODE_ENV === "production" ? server.prod : server.dev;
 
     useEffect(() => {
         const fetchSummary = async () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import server from '../environment.js';
 import { io } from "socket.io-client";
 import { Badge, TextField, Box, Container, Typography, Card, CardContent, Snackbar, Alert } from '@mui/material';
 import { Button } from '@mui/material';
@@ -24,9 +25,7 @@ import '@fontsource/space-grotesk/400.css';
 import '@fontsource/space-grotesk/700.css';
 import "../styles/videoComponent.css";
 
-// Backend Socket.io server is running at port 8000
-// Use window.location.hostname to support testing across devices on the same local network
-const server_url = `http://${window.location.hostname}:8000`;
+const server_url = process.env.NODE_ENV === "production" ? server.prod : server.dev;
 
 // Connections object is used to store the connections between the peers
 var connections = {};
