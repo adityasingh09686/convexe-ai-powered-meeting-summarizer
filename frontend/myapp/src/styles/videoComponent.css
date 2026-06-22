@@ -1,0 +1,431 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* Main container that handles the split screen */
+.meetVideoContainer {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #202124; /* Google Meet Dark */
+    overflow: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* The wrapper for the video grid and bottom controls */
+.mainArea {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+/* The Grid Container */
+.conferenceView {
+    flex-grow: 1;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+/* Individual Video Card */
+.videoCard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #3c4043; /* Darker grey for empty video */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.videoCard video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* When the user mirrors their local camera, we flip it so it feels natural */
+.videoCard.local video {
+    transform: scaleX(-1);
+}
+
+.participantName {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.4);
+    padding: 6px 12px;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+}
+
+/* Bottom Control Bar */
+.buttonContainer {
+    height: 80px;
+    background-color: #202124;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.buttonContainer .MuiIconButton-root {
+    background-color: #3c4043;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: all 0.2s;
+    color: white;
+}
+
+.buttonContainer .MuiIconButton-root:hover {
+    background-color: #4d5156;
+}
+
+/* Call End button red */
+.buttonContainer .MuiIconButton-root.endCall {
+    background-color: #ea4335;
+    width: 60px;
+    height: 40px;
+    border-radius: 20px;
+    color: white;
+}
+.buttonContainer .MuiIconButton-root.endCall:hover {
+    background-color: #d93025;
+}
+
+/* Active states for Mic/Video OFF */
+.buttonContainer .MuiIconButton-root.offState {
+    background-color: #ea4335;
+}
+.buttonContainer .MuiIconButton-root.offState:hover {
+    background-color: #d93025;
+}
+
+/* Chat Panel - Medium Inspired */
+.chatRoom {
+    width: 360px;
+    height: 100%;
+    background-color: #ffffff;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 24px;
+}
+
+.chatContainer h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #292929; /* Medium dark text */
+    margin-bottom: 24px;
+    margin-top: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.chattingDisplay {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-right: 8px; /* For scrollbar */
+}
+
+/* Chat Bubbles */
+.chatMessage {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.chatSender {
+    font-size: 12px;
+    font-weight: 600;
+    color: #757575;
+}
+
+.chatData {
+    font-size: 14px;
+    color: #292929;
+    line-height: 1.5;
+    background-color: #f2f2f2;
+    padding: 10px 14px;
+    border-radius: 0 12px 12px 12px;
+    display: inline-block;
+    align-self: flex-start;
+    word-break: break-word;
+    margin: 0;
+}
+
+/* If sender is me, different style */
+.chatMessage.me {
+    align-items: flex-end;
+}
+.chatMessage.me .chatData {
+    background-color: #1a73e8; /* Google blue */
+    color: white;
+    border-radius: 12px 0 12px 12px;
+}
+
+.chattingArea {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+}
+
+.chattingArea .MuiTextField-root {
+    flex-grow: 1;
+}
+
+/* Custom Scrollbar for chat */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Reactions & Raise Hand */
+.squareButton {
+    background-color: #3c4043 !important;
+    border-radius: 12px !important; /* Clean square with slightly rounded edges */
+    width: 50px !important;
+    height: 50px !important;
+    transition: all 0.2s !important;
+    color: white !important;
+    position: relative;
+}
+
+.squareButton:hover {
+    background-color: #4d5156 !important;
+}
+
+.squareButton.active {
+    background-color: #8ab4f8 !important; /* Google Blue highlight */
+    color: #202124 !important;
+}
+
+.reactionMenu {
+    position: absolute;
+    bottom: 70px; /* Float above the button */
+    background-color: #202124;
+    border-radius: 30px;
+    padding: 8px 16px;
+    display: flex;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 100;
+}
+
+.reactionMenu span {
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.reactionMenu span:hover {
+    transform: scale(1.3);
+}
+
+/* Flying Emojis */
+.flyingEmoji {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    z-index: 10;
+}
+
+.screenShareIndicator {
+    position: absolute;
+    top: 8px;
+    right: 42px; /* offset from hand raise */
+    background-color: rgba(26, 115, 232, 0.8);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+.flyingEmoji {
+    pointer-events: none;
+    animation: floatUp 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    z-index: 50;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate(-50%, 0) scale(0.5);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(-50%, -20px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -150px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Persistent Hand Raised Indicator */
+.handRaisedIndicator {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* Sidebar Tab System */
+.sidebarTabs {
+    display: flex;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+}
+
+.tabButton {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #757575;
+    cursor: pointer;
+    position: relative;
+    font-family: inherit;
+    transition: color 0.2s;
+}
+
+.tabButton:hover {
+    color: #292929;
+    background-color: #f9f9f9;
+}
+
+.tabButton.active {
+    color: #1a73e8; /* Google Blue */
+}
+
+.tabButton.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #1a73e8;
+    border-radius: 3px 3px 0 0;
+}
+
+/* Participants List & Search */
+.participantListContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 16px;
+}
+
+.searchBar {
+    width: 100%;
+}
+
+.participantsList {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.participantItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.participantItem:hover {
+    background-color: #f5f5f5;
+}
+
+.participantAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #1a73e8;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.participantDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.participantNameText {
+    font-size: 14px;
+    font-weight: 500;
+    color: #292929;
+}
+
+.participantStatus {
+    font-size: 12px;
+    color: #757575;
+}

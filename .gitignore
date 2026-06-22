@@ -1,0 +1,6 @@
+frontend/myapp/node_modules
+backend/node_modules
+backend/uploads/
+.env
+frontend/myapp/build
+.DS_Store

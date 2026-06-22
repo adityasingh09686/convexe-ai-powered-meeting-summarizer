@@ -1,0 +1,209 @@
+.LandingPageContainer {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.BackgroundVideo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Reverted to cover to preserve aspect ratio */
+    z-index: -1;
+    opacity: 0.9;
+    /* Reduced opacity */
+}
+
+/* Target the exact H2 tag inside the nav header */
+.navHeader h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    /* Matched to your 700.css import */
+    letter-spacing: -0.1em;
+    font-size: 8rem;
+    color: #ffffff;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navList {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+.navList>p {
+    margin: 0;
+    cursor: pointer;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    color: white;
+    background-color: transparent;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.navList>p:hover {
+    background-color: white;
+    color: black;
+    transform: scale(1.01);
+}
+
+.navList div[role="button"] p {
+    margin: 0;
+}
+
+.navList div[role="button"] {
+    background-color: white;
+    color: black;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.navList div[role="button"]:hover {
+    transform: scale(1.01);
+    background-color: white;
+    color: black;
+}
+
+/* MAGIC: When hovering over the p tags, remove the white background from the Login button */
+.navList:has(> p:hover) div[role="button"] {
+    background-color: transparent;
+    color: white;
+}
+
+/* Main content container styling */
+.landingMainContainer {
+    position: absolute;
+    top: 55%;
+    left: 5%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.landingTextContainer {
+    flex: 1;
+    padding-right: 4rem;
+    color: white;
+}
+
+.landingTextContainer h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    margin: 0 0 1.5rem 0;
+}
+
+.landingTextContainer p {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0;
+}
+
+.mainload {
+    width: 35vw;
+    max-width: 600px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0px 20px 30px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+
+/* Update your existing target */
+.navHeader h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    font-size: 5rem;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(270deg,
+            #3B82F6,
+            #8B5CF6,
+            #06b6d4,
+            #3B82F6);
+
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: flowGradient 8s ease infinite;
+}
+
+/* Define the animation timeline */
+@keyframes flowGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Start for Free Button */
+.startBtn {
+    background-color: white;
+    display: inline-block;
+    padding: 1.25rem 3.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    margin-top: 2.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.startBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.startBtn p {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    background: linear-gradient(270deg, #3B82F6, #8B5CF6, #06b6d4, #f6863b, #863bf6, #06b6d4, #3B82F6, #F54927, #09EB6C);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: flowGradient 8s ease infinite;
+}
