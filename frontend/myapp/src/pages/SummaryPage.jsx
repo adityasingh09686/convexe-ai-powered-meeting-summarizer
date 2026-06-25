@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Box, CircularProgress, IconButton, Paper, Divider } from '@mui/material';
+import { Container, Typography, Box, CircularProgress, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import server from '../environment.js';
+
 export default function SummaryPage() {
     const { meetingCode } = useParams();
     const router = useNavigate();
@@ -35,45 +36,77 @@ export default function SummaryPage() {
     }, [meetingCode, server_url]);
 
     return (
-        <Box sx={{ minHeight: '100vh', backgroundColor: '#f4f7f6', pt: 4, pb: 8, fontFamily: "'Space Grotesk', sans-serif" }}>
-            <Container maxWidth="md">
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, gap: 2 }}>
+        <Box sx={{ minHeight: '100vh', backgroundColor: '#FFFFFF', pt: { xs: 4, md: 8 }, pb: 12 }}>
+            <Container maxWidth="md" sx={{ maxWidth: '680px !important' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 6, gap: 1 }}>
                     <IconButton
                         onClick={() => router("/history")}
-                        sx={{ backgroundColor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', '&:hover': { backgroundColor: '#f0f0f0' } }}
+                        sx={{ 
+                            color: 'rgba(0, 0, 0, 0.54)', 
+                            '&:hover': { color: 'rgba(0, 0, 0, 0.84)', backgroundColor: 'transparent' },
+                            ml: -1.5 
+                        }}
+                        aria-label="back"
                     >
-                        <ArrowBackIcon sx={{ color: '#1a73e8' }} />
+                        <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h4" sx={{ fontWeight: 700, color: '#292929', fontFamily: "'Space Grotesk', sans-serif" }}>
-                        AI Meeting Summary
+                    <Typography 
+                        sx={{ 
+                            color: 'rgba(0, 0, 0, 0.54)', 
+                            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                            fontSize: '15px',
+                            fontWeight: 400
+                        }}
+                    >
+                        Meeting Code: {meetingCode}
                     </Typography>
                 </Box>
 
-                <Paper elevation={0} sx={{ p: 4, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <Typography variant="h6" sx={{ color: '#1a73e8', fontWeight: 600, mb: 1 }}>
-                        Meeting Code: {meetingCode}
-                    </Typography>
-                    <Divider sx={{ mb: 4 }} />
+                <Typography 
+                    variant="h1" 
+                    sx={{ 
+                        fontWeight: 700, 
+                        color: 'rgba(0, 0, 0, 0.84)', 
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                        fontSize: { xs: '32px', md: '42px' },
+                        lineHeight: 1.2,
+                        letterSpacing: '-0.02em',
+                        mb: 5
+                    }}
+                >
+                    AI Meeting Summary
+                </Typography>
 
-                    {loading ? (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-                            <CircularProgress />
-                        </Box>
-                    ) : error ? (
-                        <Typography sx={{ color: 'red', textAlign: 'center' }}>
-                            {error}
-                        </Typography>
-                    ) : summary ? (
-                        <Box sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.8, fontSize: '1.1rem', color: '#444' }}>
-                            {/* Simple rendering for markdown-like text */}
-                            {summary}
-                        </Box>
-                    ) : (
-                        <Typography sx={{ textAlign: 'center', color: '#757575' }}>
-                            No summary is available for this meeting.
-                        </Typography>
-                    )}
-                </Paper>
+                {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+                        <CircularProgress sx={{ color: 'rgba(0,0,0,0.84)' }} />
+                    </Box>
+                ) : error ? (
+                    <Typography sx={{ color: '#d93025', fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif', fontSize: '20px' }}>
+                        {error}
+                    </Typography>
+                ) : summary ? (
+                    <Box 
+                        sx={{ 
+                            whiteSpace: 'pre-wrap', 
+                            lineHeight: 1.58, 
+                            fontSize: '20px', 
+                            color: 'rgba(0, 0, 0, 0.84)',
+                            fontFamily: 'charter, Georgia, Cambria, "Times New Roman", Times, serif',
+                            wordBreak: 'break-word',
+                            letterSpacing: '-0.003em',
+                            '& p': {
+                                mb: '32px'
+                            }
+                        }}
+                    >
+                        {summary}
+                    </Box>
+                ) : (
+                    <Typography sx={{ color: 'rgba(0, 0, 0, 0.54)', fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif', fontSize: '20px', fontStyle: 'italic' }}>
+                        No summary is available for this meeting.
+                    </Typography>
+                )}
             </Container>
         </Box>
     );

@@ -77,13 +77,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const deleteUserHistory = async (meetingCode) => {
+        try {
+            let request = await client.delete("/delete_activity", {
+                params: {
+                    token: localStorage.getItem("token"),
+                    meeting_code: meetingCode
+                }
+            });
+            return request.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const data = {
         userData,
         setUserData,
         handleRegister,
         handleLogin,
         getUserHistoryOfUser,
-        addToUserHistory
+        addToUserHistory,
+        deleteUserHistory
     };
 
     return (

@@ -8,34 +8,47 @@ import HomeIcon from '@mui/icons-material/Home';
 import { IconButton, Container, Box, CircularProgress, Grid, Snackbar, Alert, Button, CardActions } from '@mui/material';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function History() {
-    const { getUserHistoryOfUser } = useContext(AuthContext);
+    const { getUserHistoryOfUser, deleteUserHistory } = useContext(AuthContext);
     const [meetings, setMeetings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const router = useNavigate();
 
-    useEffect(() => {
-        const fetchHistory = async () => {
-            try {
-                const history = await getUserHistoryOfUser();
-                if (Array.isArray(history)) {
-                    setMeetings(history);
-                } else if (history && history.message) {
-                    setError(history.message);
-                } else {
-                    setMeetings([]);
-                }
-            } catch (e) {
-                console.log(e);
-                setError('Failed to fetch history');
-            } finally {
-                setLoading(false);
+    const fetchHistory = async () => {
+        try {
+            setLoading(true);
+            const history = await getUserHistoryOfUser();
+            if (Array.isArray(history)) {
+                setMeetings(history);
+            } else if (history && history.message) {
+                setError(history.message);
+            } else {
+                setMeetings([]);
             }
-        };
+        } catch (e) {
+            console.log(e);
+            setError('Failed to fetch history');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchHistory();
     }, [getUserHistoryOfUser]);
+
+    const handleDelete = async (e, meetingCode) => {
+        e.stopPropagation();
+        try {
+            await deleteUserHistory(meetingCode);
+            await fetchHistory();
+        } catch (error) {
+            setError('Failed to delete history');
+        }
+    };
 
     let formatDate = (dateString) => {
         try {
@@ -81,10 +94,17 @@ export default function History() {
                                         boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
                                         transition: 'transform 0.2s',
                                         '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' },
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        position: 'relative'
                                     }}
                                     onClick={() => router(`/${meeting.meetingCode}`)}
                                 >
+                                    <IconButton 
+                                        sx={{ position: 'absolute', top: 8, right: 8, color: '#f44336' }} 
+                                        onClick={(e) => handleDelete(e, meeting.meetingCode)}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
                                     <CardContent sx={{ p: 3 }}>
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
                                             <EventAvailableIcon sx={{ color: '#1a73e8' }} />

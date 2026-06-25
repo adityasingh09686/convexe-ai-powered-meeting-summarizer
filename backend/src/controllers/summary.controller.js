@@ -41,7 +41,7 @@ export const generateSummary = async (req, res) => {
         console.log("Video processing complete. Generating summary...");
 
         // 3. Generate summary
-        const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
         const result = await model.generateContent([
             {
                 fileData: {

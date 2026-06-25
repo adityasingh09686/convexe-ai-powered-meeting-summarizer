@@ -76,6 +76,14 @@ export const connectToSocket = (server) => {
             }
         });
 
+        socket.on("caption", (text, senderName) => {
+            const rooms = Array.from(socket.rooms);
+            const callRoom = rooms.find(room => room !== socket.id);
+            if (callRoom) {
+                socket.to(callRoom).emit("caption", text, senderName);
+            }
+        });
+
         socket.on("whiteboard-action", (actionData) => {
             const rooms = Array.from(socket.rooms);
             const callRoom = rooms.find(room => room !== socket.id);

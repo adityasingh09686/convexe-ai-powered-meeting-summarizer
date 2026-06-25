@@ -20,6 +20,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import PeopleIcon from '@mui/icons-material/People';
 import BrushIcon from '@mui/icons-material/Brush';
+import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
+import ClosedCaptionOffIcon from '@mui/icons-material/ClosedCaptionOff';
 import Whiteboard from './components/Whiteboard';
 import '@fontsource/space-grotesk/400.css';
 import '@fontsource/space-grotesk/700.css';
@@ -145,6 +147,11 @@ export default function VideoMeetComponents() {
     const [isUploading, setIsUploading] = useState(false);
     const mediaRecorderRef = useRef(null);
     const recordedChunksRef = useRef([]);
+
+    // Captions state
+    const [isCaptionsEnabled, setIsCaptionsEnabled] = useState(false);
+    const [currentCaption, setCurrentCaption] = useState("");
+    const recognitionRef = useRef(null);
 
     const getPermissions = async () => {
         try {
@@ -340,6 +347,12 @@ export default function VideoMeetComponents() {
             setLocalSocketId(socketRef.current.id);
             socketRef.current.on("chat-message", addMessage);
 
+            socketRef.current.on("caption", (text, senderName) => {
+                setCurrentCaption(`${senderName}: ${text}`);
+                clearTimeout(window.captionTimeout);
+                window.captionTimeout = setTimeout(() => setCurrentCaption(""), 5000);
+            });
+
             socketRef.current.on("name-sync", (roomNames) => {
                 setVideos((videos) => {
                     let updated = [...videos];
@@ -391,6 +404,63 @@ export default function VideoMeetComponents() {
             localVideoRef.current.srcObject = window.localStream;
         }
     }, [askForUsername]);
+
+    useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = true;
+            recognitionRef.current.interimResults = true;
+
+            recognitionRef.current.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                const text = finalTranscript || interimTranscript;
+                if (text && socketRef.current) {
+                    const senderName = username || localSocketId;
+                    socketRef.current.emit("caption", text, senderName);
+                    if (isCaptionsEnabled) {
+                        setCurrentCaption(`${senderName}: ${text}`);
+                        clearTimeout(window.captionTimeout);
+                        window.captionTimeout = setTimeout(() => setCurrentCaption(""), 5000);
+                    }
+                }
+            };
+            
+            recognitionRef.current.onerror = (e) => {
+                console.error("Speech recognition error", e);
+            };
+        }
+    }, [username, localSocketId, isCaptionsEnabled]);
+
+    const toggleCaptions = () => {
+        const newState = !isCaptionsEnabled;
+        setIsCaptionsEnabled(newState);
+        
+        if (newState) {
+            if (recognitionRef.current) {
+                try {
+                    recognitionRef.current.start();
+                } catch(e){}
+            } else {
+                alert("Speech Recognition is not supported in your browser.");
+                setIsCaptionsEnabled(false);
+            }
+        } else {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+            setCurrentCaption("");
+        }
+    };
 
     let getMedia = () => {
         setVideo(videoAvailable);
@@ -753,6 +823,29 @@ export default function VideoMeetComponents() {
                                             </div>
                                         ))}
                                     </div>
+
+                                    {/* Captions Overlay */}
+                                    {isCaptionsEnabled && currentCaption && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: '90px',
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            backgroundColor: 'rgba(0,0,0,0.7)',
+                                            color: 'white',
+                                            padding: '8px 16px',
+                                            borderRadius: '8px',
+                                            fontSize: '1.2rem',
+                                            maxWidth: '80%',
+                                            textAlign: 'center',
+                                            zIndex: 1000,
+                                            boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                                            transition: 'all 0.3s ease',
+                                            fontFamily: "'Space Grotesk', sans-serif"
+                                        }}>
+                                            {currentCaption}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Bottom Control Bar */}
@@ -836,6 +929,10 @@ export default function VideoMeetComponents() {
                                             {isUploading ? <CircularProgress size={24} style={{color: 'white'}}/> : (isRecording ? <StopCircleIcon /> : <RadioButtonCheckedIcon />)}
                                         </IconButton>
                                     )}
+
+                                    <IconButton onClick={toggleCaptions}>
+                                        {isCaptionsEnabled ? <ClosedCaptionIcon style={{color: '#1a73e8'}}/> : <ClosedCaptionOffIcon style={{color: 'white'}}/>}
+                                    </IconButton>
 
                                     <IconButton className="endCall" onClick={() => window.location.href = "/"}>
                                         <CallEndIcon />

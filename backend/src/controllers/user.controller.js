@@ -120,4 +120,21 @@ const addToHistory = async (req, res) => {
     }
 }
 
-export { login, register, getUserHistory, addToHistory };
+const deleteFromHistory = async (req, res) => {
+    const { token, meeting_code } = req.query;
+
+    try {
+        const user = await User.findOne({ token: token });
+        if (!user) {
+            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+        }
+
+        await Meeting.deleteOne({ user_id: user.username, meetingCode: meeting_code });
+
+        res.status(httpStatus.OK).json({ message: "Deleted from history" });
+    } catch (e) {
+        res.json({ message: `Something went wrong ${e}` });
+    }
+}
+
+export { login, register, getUserHistory, addToHistory, deleteFromHistory };
